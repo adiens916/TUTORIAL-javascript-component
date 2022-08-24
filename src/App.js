@@ -4,8 +4,31 @@ import Items from "./components/Items.js";
 export default class App extends Component {
   setup() {
     console.log("App setup");
+
+    /**
+     * @type {{
+     *  filterMode: number,
+     *  items: {
+     *    seq: number,
+     *    contents: string,
+     *    active: boolean
+     *  }[]
+     * }}
+     */
     this.$state = {
-      items: ["item1", "item2", "item3"],
+      filterMode: 0,
+      items: [
+        {
+          seq: 1,
+          contents: "item1",
+          active: false,
+        },
+        {
+          seq: 2,
+          contents: "item2",
+          active: true,
+        },
+      ],
     };
   }
 
@@ -29,12 +52,18 @@ export default class App extends Component {
 
   addItem() {
     const { items } = this.$state;
-    this.setState({ items: [...items, `item${items.length + 1}`] });
+    const seq = Math.max(0, ...items.map((item) => item.seq)) + 1;
+    const contents = `item${seq}`;
+
+    this.setState({
+      items: [...items, { seq, contents, active: false }],
+    });
   }
 
-  deleteItem(event) {
-    const { items } = this.$state;
-    items.splice(event.target.dataset.index, 1);
-    this.setState({ items });
+  deleteItem(seq) {
+    const items = [...this.$state.items];
+    this.setState({
+      items: items.filter((item) => item.seq !== seq),
+    });
   }
 }

@@ -11,10 +11,10 @@ export default class Items extends Component {
       <ul>
         ${this.$props.items
           .map(
-            (item, index) => `
+            (item) => `
           <li>
-            ${item}
-            <button class="deleteButton" data-index="${index}">삭제</button>
+            ${item.contents}
+            <button class="deleteButton" data-index=${item.seq}>삭제</button>
           </li>
         `
           )
@@ -26,6 +26,10 @@ export default class Items extends Component {
 
   setEvent() {
     this.addEvent(".appendButton", "click", this.$props.addItem);
-    this.addEvent(".deleteButton", "click", this.$props.deleteItem);
+
+    this.addEvent(".deleteButton", "click", ({ target }) => {
+      // dataset 객체는 문자열 집합이므로 Number로 형변환
+      this.$props.deleteItem(Number(target.dataset.index));
+    });
   }
 }

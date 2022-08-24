@@ -3,6 +3,10 @@ export default class Component {
   $props;
   $state;
 
+  /**
+   * @param {Element} $target
+   * @param {Object} $props
+   */
   constructor($target, $props) {
     this.$target = $target;
     this.$props = $props;
@@ -19,6 +23,11 @@ export default class Component {
 
   setEvent() {}
 
+  /**
+   * @param {string} selector
+   * @param {string} eventType
+   * @param {EventListener} callback
+   */
   addEvent(selector, eventType, callback) {
     /**
      * event listener를 각각의 하위 요소가 아니라
