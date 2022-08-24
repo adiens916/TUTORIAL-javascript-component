@@ -14,18 +14,26 @@ export default class Items extends Component {
             (item) => `
           <li>
             ${item.contents}
+            <button
+              class="toggleButton"
+              data-index=${item.seq}
+              style="color: ${item.active ? "red" : "gray"}"
+            >
+              ${item.active ? "활성" : "비활성"}
+            </button>
             <button class="deleteButton" data-index=${item.seq}>삭제</button>
           </li>
         `
           )
           .join("")}
       </ul>
-      <button class="appendButton">추가</button>
     `;
   }
 
   setEvent() {
-    this.addEvent(".appendButton", "click", this.$props.addItem);
+    this.addEvent(".toggleButton", "click", ({ target }) => {
+      this.$props.toggleItem(Number(target.dataset.index));
+    });
 
     this.addEvent(".deleteButton", "click", ({ target }) => {
       // dataset 객체는 문자열 집합이므로 Number로 형변환

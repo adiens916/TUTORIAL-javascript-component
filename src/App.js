@@ -52,8 +52,10 @@ export default class App extends Component {
     new ItemAdder($itemAdder, {
       addItem: this.addItem.bind(this),
     });
+
     new Items($items, {
       items: this.$state.items,
+      toggleItem: this.toggleItemActivity.bind(this),
       deleteItem: this.deleteItem.bind(this),
     });
   }
@@ -65,6 +67,15 @@ export default class App extends Component {
     this.setState({
       items: [...items, { seq, contents, active: false }],
     });
+  }
+
+  toggleItemActivity(seq) {
+    const items = [...this.$state.items];
+
+    const index = items.findIndex((item) => item.seq === seq);
+    items[index].active = !items[index].active;
+
+    this.setState({ items });
   }
 
   deleteItem(seq) {
