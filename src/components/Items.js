@@ -9,13 +9,23 @@ export default class Items extends Component {
     console.log("Items template");
     return `
       <ul>
-        ${this.$props.items.map((item) => `<li>${item}</li>`).join("")}
+        ${this.$props.items
+          .map(
+            (item, index) => `
+          <li>
+            ${item}
+            <button class="deleteButton" data-index="${index}">삭제</button>
+          </li>
+        `
+          )
+          .join("")}
       </ul>
-      <button id="append">추가</button>
+      <button class="appendButton">추가</button>
     `;
   }
 
   setEvent() {
-    this.addEvent("#append", "click", this.$props.addItem);
+    this.addEvent(".appendButton", "click", this.$props.addItem);
+    this.addEvent(".deleteButton", "click", this.$props.deleteItem);
   }
 }

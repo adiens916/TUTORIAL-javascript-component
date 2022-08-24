@@ -23,11 +23,18 @@ export default class App extends Component {
     new Items($items, {
       items: this.$state.items,
       addItem: this.addItem.bind(this),
+      deleteItem: this.deleteItem.bind(this),
     });
   }
 
   addItem() {
     const { items } = this.$state;
     this.setState({ items: [...items, `item${items.length + 1}`] });
+  }
+
+  deleteItem(event) {
+    const { items } = this.$state;
+    items.splice(event.target.dataset.index, 1);
+    this.setState({ items });
   }
 }
