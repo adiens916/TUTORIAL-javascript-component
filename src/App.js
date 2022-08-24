@@ -2,6 +2,7 @@ import Component from "./core/Component.js";
 import Items from "./components/Items.js";
 import ItemAdder from "./components/ItemAdder.js";
 import ItemFilter from "./components/ItemFilter.js";
+import { FILTER_MODE } from "./components/ItemFilter.js";
 
 export default class App extends Component {
   setup() {
@@ -18,7 +19,7 @@ export default class App extends Component {
      * }}
      */
     this.$state = {
-      filterMode: 0,
+      filterMode: FILTER_MODE.all,
       items: [
         {
           seq: 1,
@@ -39,24 +40,45 @@ export default class App extends Component {
     return `
       <div data-component="ItemAdder"></div>
       <div data-component="Items"></div>
+      <div data-component="ItemFilter"></div>
     `;
   }
 
   mounted() {
     console.log("App mount");
-    const $items = this.$target.querySelector('[data-component="Items"]');
     const $itemAdder = this.$target.querySelector(
       '[data-component="ItemAdder"]'
     );
-
     new ItemAdder($itemAdder, {
       addItem: this.addItem.bind(this),
     });
 
+    const $items = this.$target.querySelector('[data-component="Items"]');
     new Items($items, {
-      items: this.$state.items,
+      items: this.filteredItems,
       toggleItem: this.toggleItemActivity.bind(this),
       deleteItem: this.deleteItem.bind(this),
+    });
+
+    const $itemFilter = this.$target.querySelector(
+      '[data-component="ItemFilter"]'
+    );
+    new ItemFilter($itemFilter, {
+      filterItem: this.filterItem.bind(this),
+    });
+  }
+
+  get filteredItems() {
+    const { filterMode, items } = this.$state;
+    return items.filter(({ active }) => {
+      switch (filterMode) {
+        case FILTER_MODE.activeOnly:
+          return active;
+        case FILTER_MODE.inactiveOnly:
+          return !active;
+        default:
+          return true;
+      }
     });
   }
 
@@ -83,5 +105,9 @@ export default class App extends Component {
     this.setState({
       items: items.filter((item) => item.seq !== seq),
     });
+  }
+
+  filterItem(filterMode) {
+    this.setState({ filterMode });
   }
 }
